@@ -8,7 +8,7 @@ public class SmartLibrary implements LibraryADT {
     - console menu: runmenu, printmenu, handlechoice (like a remote to choose from menu)
      */
 
- @Override
+    @Override
     public void addBook(int isbn, String title, String author) {}
 
     @Override
@@ -18,7 +18,13 @@ public class SmartLibrary implements LibraryADT {
     public void borrowBook(int isbn) {}
 
     @Override
+    public void returnBook(int isbn) {}
+
+    @Override
     public void viewLatestHistory() {}
+
+    @Override
+    public void viewCatalogue() {}
 
     public void runMenu() {
         Scanner sc = new Scanner(System.in);
@@ -34,9 +40,7 @@ public class SmartLibrary implements LibraryADT {
             }
 
             int choice = sc.nextInt();
-
             if (choice == 5) break;
-
             handleChoice(choice, sc);
         }
 
@@ -44,12 +48,15 @@ public class SmartLibrary implements LibraryADT {
     }
 
     private void printMenu() {
-        System.out.println("\n--- SmartLibrary Menu ---");
-        System.out.println("1. Add Book");
-        System.out.println("2. Search Book (BST)");
-        System.out.println("3. Borrow Book (Stack)");
-        System.out.println("4. View History");
-        System.out.println("5. Exit");
+        System.out.println("|====================|");
+        System.out.println("| Smart Library Menu |");
+        System.out.println("|====================|");
+        System.out.println("| 1. Add Book        |");
+        System.out.println("| 2. Search Book     |");
+        System.out.println("| 3. Borrow Book     |");
+        System.out.println("| 4. View History    |");
+        System.out.println("| 5. Exit            |");
+        System.out.println("|====================|");
     }
 
     private void handleChoice(int choice, Scanner sc) {
@@ -70,11 +77,21 @@ public class SmartLibrary implements LibraryADT {
 
             case 2:
                 System.out.print("Enter ISBN to search: ");
+                if (!sc.hasNextInt()){
+                    System.out.println("Invalid ISBN.");
+                    sc.next();
+                    break;
+                }
                 searchBook(sc.nextInt());
                 break;
 
             case 3:
                 System.out.print("Enter ISBN to borrow: ");
+                if (!sc.hasNextInt()){
+                    System.out.println("Invalid ISBN.");
+                    sc.next();
+                    break;
+                }
                 borrowBook(sc.nextInt());
                 break;
 
