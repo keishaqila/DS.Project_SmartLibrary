@@ -1,12 +1,3 @@
-
-    /*
-    Carissa:
-    wraps built-in ( using) Stack to track borrowing history in LIFO view
-    called by SmartLibrary.borrowBook() and viewLatestHistory()
-    * main methods: push, pop, show, isEmpty
-     */
-    import java.util.Stack;
-
 /*
     Carissa:
     wraps built-in Stack to track borrowing history in LIFO view
@@ -14,6 +5,7 @@
     main methods: push, pop, show, isEmpty
 */
 
+    import.java.util.Stack;
     public class BorrowStack {
 
         private Stack<Book> stack = new Stack<>();
