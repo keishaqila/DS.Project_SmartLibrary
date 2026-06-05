@@ -1,12 +1,6 @@
 import java.util.Scanner;
 
 public class SmartLibrary implements LibraryADT {
-    /*
-    Ahdys:
-    - implement from LibraryADT and fill inside methods
-    Member:
-    - console menu: runmenu, printmenu, handlechoice (like a remote to choose from menu)
-     */
 
     @Override
     public void addBook(int isbn, String title, String author) {}
@@ -40,7 +34,7 @@ public class SmartLibrary implements LibraryADT {
             }
 
             int choice = sc.nextInt();
-            if (choice == 5) break;
+            if (choice == 7) break;
             handleChoice(choice, sc);
         }
 
@@ -54,8 +48,10 @@ public class SmartLibrary implements LibraryADT {
         System.out.println("| 1. Add Book        |");
         System.out.println("| 2. Search Book     |");
         System.out.println("| 3. Borrow Book     |");
-        System.out.println("| 4. View History    |");
-        System.out.println("| 5. Exit            |");
+        System.out.println("| 4. Return Book     |");
+        System.out.println("| 5. View History    |");
+        System.out.println("| 6. View Catalogue  |");
+        System.out.println("| 7. Exit            |");
         System.out.println("|====================|");
     }
 
@@ -94,13 +90,26 @@ public class SmartLibrary implements LibraryADT {
                 }
                 borrowBook(sc.nextInt());
                 break;
-
             case 4:
+                System.out.print("Enter ISBN to return: ");
+                if (!sc.hasNextInt()){
+                    System.out.println("Invalid ISBN.");
+                    sc.next();
+                    break;
+                }
+                returnBook(sc.nextInt());
+                break;
+
+            case 5:
                 viewLatestHistory();
                 break;
 
+            case 6:
+                viewCatalogue();
+                break;
+
             default:
-                System.out.println("Invalid option. Please choose between 1-5.");
+                System.out.println("Invalid option. Please choose between 1-7.");
         }
     }
 }
