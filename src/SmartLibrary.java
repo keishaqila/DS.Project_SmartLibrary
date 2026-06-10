@@ -2,23 +2,74 @@ import java.util.Scanner;
 
 public class SmartLibrary implements LibraryADT {
 
-    @Override
-    public void addBook(int isbn, String title, String author) {}
+    private final BookBST catalogue;
+    private final BorrowStack history;
+
+    public SmartLibrary() {
+        this.catalogue = new BookBST();
+        this.history = new BorrowStack();
+    }
 
     @Override
-    public void searchBook(int isbn) {}
+    public void addBook(int isbn, String title, String author) {
+        catalogue.insert(isbn, title, author);
+        System.out.println("Successfully added: \"" + title + "\" to the catalogue.");
+    }
 
     @Override
-    public void borrowBook(int isbn) {}
+    public void searchBook(int isbn) {
+        Book foundBook = catalogue.search(isbn);
+        if (foundBook != null) {
+            System.out.println("Book Found! -> " + foundBook);
+            System.out.println("Availability: " + (foundBook.isAvailable() ? "Available" : "Checked Out"));
+        } else {
+            System.out.println("Error: Book with ISBN " + isbn + " not found in the catalogue.");
+        }
+    }
 
     @Override
-    public void returnBook(int isbn) {}
+    public void borrowBook(int isbn) {
+        Book targetBook = catalogue.search(isbn);
+
+        if (targetBook == null) {
+            System.out.println("Error: Book with ISBN " + isbn + " does not exist.");
+            return;
+        }
+        if (!targetBook.isAvailable()) {
+            System.out.println("Sorry, \"" + targetBook.getTitle() + "\" is already borrowed.");
+            return;
+        }
+        targetBook.setAvailable(false);
+        history.push(targetBook);
+    }
 
     @Override
-    public void viewLatestHistory() {}
+    public void returnBook(int isbn) {
+        Book targetBook = catalogue.search(isbn);
+
+        if (targetBook == null) {
+            System.out.println("Error: This book does not belong to our library catalogue.");
+            return;
+        }
+        if (targetBook.isAvailable()) {
+            System.out.println("This book is already sitting in the library catalogue.");
+            return;
+        }
+        targetBook.setAvailable(true);
+        System.out.println("Successfully returned: \"" + targetBook.getTitle() + "\"");
+    }
 
     @Override
-    public void viewCatalogue() {}
+    public void viewLatestHistory() {
+        history.show();
+    }
+
+    @Override
+    public void viewCatalogue() {
+        System.out.println("\n- Current Library Catalogue (Sorted by ISBN) -");
+        catalogue.catalogue();
+        System.out.println("_________________________________________________");
+    }
 
     public void runMenu() {
         Scanner sc = new Scanner(System.in);
