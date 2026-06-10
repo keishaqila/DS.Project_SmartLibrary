@@ -55,8 +55,14 @@ public class SmartLibrary implements LibraryADT {
             System.out.println("This book is already sitting in the library catalogue.");
             return;
         }
-        targetBook.setAvailable(true);
-        System.out.println("Successfully returned: \"" + targetBook.getTitle() + "\"");
+        if (!history.isEmpty() && history.pop().getIsbn() == isbn) {
+            targetBook.setAvailable(true);
+            System.out.println("Successfully returned: \"" + targetBook.getTitle() + "\"");
+        } else {
+            // fallback just in case they return books out of order
+            targetBook.setAvailable(true);
+            System.out.println("Successfully returned: \"" + targetBook.getTitle() + "\" (History updated)");
+        }
     }
 
     @Override
