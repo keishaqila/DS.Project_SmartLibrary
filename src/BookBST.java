@@ -4,63 +4,39 @@ public class BookBST {
 
     // INSERT BOOK - Adds a new book into correct BST  position by ISBN
     public void insert(int isbn, String title, String author){
-        root = in(root, isbn, title, author);
+        root = ins(root, isbn, title, author);
     }
 
-    private Book in(Book node, int isbn, String title, String author) {
+    // Helper method used to compare ISBNs for book insertion.
+    private Book ins(Book node, int isbn, String title, String author) {
+        // Base book: If it is a null point, create an insertion point here.
         if (node == null) return new Book(isbn, title, author);
+
+        // If the new ISBN is smaller, recursively traverses down the left subtree.
         if (isbn < node.getIsbn())
-            node.left = in(node.left, isbn, title, author);
+            node.left = ins(node.left, isbn, title, author);
+
+        // If the new ISBN is larger, recursively traverses down the right subtree.
         else if (isbn > node.getIsbn())
-            node.right = in(node.right, isbn, title, author);
+            node.right = ins(node.right, isbn, title, author);
         return node;
     }
 
-    // SEARCH A BOOK - Returns the book if found, null if not found
+    // SEARCH A BOOK - Locates a book using its unique ISBN.
     public Book search (int isbn){
-        return searching(root, isbn);
+        return sea(root, isbn);
     }
 
-    private Book searching(Book node,int isbn){
+    // Helper method used to achieve O(log n) search efficiency
+    private Book sea(Book node,int isbn){
+        // stops if the book is found or doesn't exist
         if (node == null || node.getIsbn() == isbn) return node;
-        return (isbn < node.getIsbn()) ? searching(node.left, isbn) : searching(node.right, isbn);
+
+        // Ternary condition: If target isbn is smaller, go to left subtree. If not, go to the right.
+        return (isbn < node.getIsbn()) ? sea(node.left, isbn) : sea(node.right, isbn);
     }
 
-    // REMOVES A BOOK - Removes the book from the BST and returns onto the BorrowStack.
-    public Book remove(int isbn){
-        Book target = search(isbn);
-        if (target == null) return null;
-        root = delete(root, isbn);
-        return target;
-    }
-
-    private Book delete(Book node,int isbn){
-        if (node == null) return null;
-
-        if (isbn < node.getIsbn()) {
-            node.left = delete(node.left, isbn);
-        } else if (isbn > node.getIsbn()) {
-            node.right = delete(node.right, isbn);
-        } else {
-            if (node.left == null) return node.right;
-            if (node.right == null) return node.left;
-
-            Book successor = findMin(node.right);
-            node.right = delete(node.right, successor.getIsbn());
-            Book newNode = new Book(successor.getIsbn(), successor.getTitle(), successor.getAuthor());
-            newNode.left = node.left;
-            newNode.right = node.right;
-            return newNode;
-        }
-        return node;
-    }
-
-    private Book findMin(Book node){
-        while (node.left != null) node = node.left;
-        return node;
-    }
-
-    // DISPLAYS CATALOGUE OF BOOKS - Prints all books sorted by ISBN (in-order)
+    // Displays catalogue of all books in order from smallest to greatest ISBN value.
     public void catalogue() {
         if (root == null) {
             System.out.println("No books in catalogue.");
@@ -69,11 +45,11 @@ public class BookBST {
         inOrder(root);
     }
 
+    // In-Order Traversal (Left -> Root -> Right)
     private void inOrder (Book node){
         if (node == null) return;
-        inOrder(node.left);
-        System.out.println(node);
-        inOrder(node.right);
+        inOrder(node.left);         // Visits all SMALLER items in left subtree
+        System.out.println(node);   // Print the current parent book node
+        inOrder(node.right);        // Visits all GREATER items in right subtree
     }
 }
-

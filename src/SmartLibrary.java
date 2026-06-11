@@ -1,6 +1,9 @@
 import java.util.Scanner;
+import java.io.*;
 
 public class SmartLibrary implements LibraryADT {
+
+    private static final String Book_File = "books.txt";
 
     private final BookBST catalogue;
     private final BorrowStack history;
@@ -8,6 +11,27 @@ public class SmartLibrary implements LibraryADT {
     public SmartLibrary() {
         this.catalogue = new BookBST();
         this.history = new BorrowStack();
+
+        loadBooksFromFile();
+    }
+
+    private void loadBooksFromFile() {
+        try (BufferedReader br = new BufferedReader(new FileReader(Book_File))) {
+            String line;
+            while ((line = br.readLine()) != null){
+                String[] books = line.split(",");
+                if (books.length == 3){
+                    int isbn = Integer.parseInt(books[0].trim());
+                    String title = books[1].trim();
+                    String author = books[2].trim();
+
+                    catalogue.insert(isbn, title, author);
+                }
+            }
+            System.out.println("Successfully loaded from " + Book_File);
+        } catch (IOException | NumberFormatException e) {
+            System.out.println("Notice: Could not read initialization file. Starting with an empty catalogue.");
+        }
     }
 
     @Override
@@ -116,6 +140,11 @@ public class SmartLibrary implements LibraryADT {
         switch (choice) {
             case 1:
                 System.out.print("Enter ISBN: ");
+                if (!sc.hasNextInt()){
+                    System.out.println("Invalid ISBN. Must be a number.");
+                    sc.next();
+                    break;
+                }
                 int isbn = sc.nextInt();
                 sc.nextLine();
 
